@@ -1,7 +1,13 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+  reactStrictMode: true,
   trailingSlash: true,
+  // Add this for better error reporting
+  productionBrowserSourceMaps: true,
+  // Disable static optimization temporarily to debug
+  swcMinify: false,
+
   images: {
     unoptimized: true,
     remotePatterns: [
