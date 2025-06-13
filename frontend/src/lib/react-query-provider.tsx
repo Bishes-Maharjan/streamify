@@ -15,7 +15,7 @@ export function ReactQueryProvider({
             // Disable queries during SSR
             enabled: typeof window !== 'undefined',
             staleTime: 60 * 1000, // 1 minute
-            retry: (failureCount, error: unknown) => {
+            retry: (failureCount) => {
               // Don't retry during build/SSR
               if (typeof window === 'undefined') return false;
               return failureCount < 3;

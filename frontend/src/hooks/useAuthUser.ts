@@ -2,11 +2,7 @@ import { axiosInstance } from '@/lib/axios';
 import { useQuery } from '@tanstack/react-query';
 
 export const useAuthUser = () => {
-  const {
-    data: user,
-    isLoading,
-    error,
-  } = useQuery({
+  const { data: user, isLoading } = useQuery({
     queryKey: ['auth-user'],
     queryFn: async () => {
       const res = await axiosInstance.get('/auth/me', {
@@ -23,5 +19,5 @@ export const useAuthUser = () => {
     refetchOnWindowFocus: false,
   });
 
-  return { user, isLoading, error };
+  return { user, isLoading };
 };
