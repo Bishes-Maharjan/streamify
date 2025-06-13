@@ -14,6 +14,13 @@ export const useAuthUser = () => {
       });
       return res.data;
     },
+    // Disable query during SSR
+    enabled: typeof window !== 'undefined',
+    // Don't retry during build
+    retry: false,
+    // Handle network errors gracefully
+    retryOnMount: false,
+    refetchOnWindowFocus: false,
   });
 
   return { user, isLoading, error };

@@ -1,6 +1,6 @@
 'use client';
 import { useAuthUser } from '@/hooks/useAuthUser';
-import { createContext, useContext } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 
 type User = {
   fullName: string;
@@ -25,7 +25,23 @@ export const AuthProvider = ({
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
+  // During SSR or before hydration, return safe defaults
+  if (!isHydrated) {
+    return (
+      <AuthContext.Provider value={{ user: null, isLoading: true }}>
+        {children}
+      </AuthContext.Provider>
+    );
+  }
+
   const { user, isLoading } = useAuthUser();
+
   return (
     <AuthContext.Provider value={{ user, isLoading }}>
       {children}
