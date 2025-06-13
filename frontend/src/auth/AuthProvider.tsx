@@ -27,6 +27,9 @@ export const AuthProvider = ({
 }>) => {
   const [isHydrated, setIsHydrated] = useState(false);
 
+  // Move hook call to the top - always call hooks in the same order
+  const { user, isLoading } = useAuthUser();
+
   useEffect(() => {
     setIsHydrated(true);
   }, []);
@@ -39,8 +42,6 @@ export const AuthProvider = ({
       </AuthContext.Provider>
     );
   }
-
-  const { user, isLoading } = useAuthUser();
 
   return (
     <AuthContext.Provider value={{ user, isLoading }}>
