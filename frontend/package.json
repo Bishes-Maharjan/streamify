@@ -13,7 +13,6 @@
     "@stream-io/video-react-sdk": "^1.18.5",
     "@tanstack/react-query": "^5.80.6",
     "axios": "^1.9.0",
-    "index.css": "link:stream-chat-react/dist/css/index.css",
     "lucide-react": "^0.514.0",
     "next": "15.3.3",
     "react": "^19.1.0",
