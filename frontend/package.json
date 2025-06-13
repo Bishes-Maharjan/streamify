@@ -32,7 +32,6 @@
     "daisyui": "^5.0.43",
     "eslint": "^9",
     "eslint-config-next": "15.3.3",
-    "node@latest": "link:types/node@latest",
     "tailwindcss": "^4.1.8",
     "typescript": "^5"
   }
