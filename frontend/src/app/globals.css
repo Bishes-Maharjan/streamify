@@ -1,0 +1,7 @@
+@import 'tailwindcss';
+@import 'stream-chat-react/dist/css/v2/index.css';
+
+@plugin "daisyui";
+@plugin "daisyui" {
+  themes: all;
+}

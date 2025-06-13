@@ -1,0 +1,107 @@
+/* Custom Stream Chat Styles */
+
+/* Chat container */
+.str-chat {
+  height: 100%;
+  font-family: inherit;
+}
+
+/* Channel header */
+.str-chat__header-livestream {
+  background: oklch(var(--b1));
+  border-bottom: 1px solid oklch(var(--b3));
+  padding: 1rem;
+}
+
+.str-chat__header-livestream-left {
+  font-weight: 600;
+  color: oklch(var(--bc));
+}
+
+/* Message list */
+.str-chat__list {
+  background: oklch(var(--b1));
+  padding: 1rem;
+}
+
+.str-chat__message-simple {
+  margin-bottom: 1rem;
+}
+
+.str-chat__message-simple__actions {
+  display: none;
+}
+
+.str-chat__message-simple-text-inner {
+  background: oklch(var(--b2));
+  border: 1px solid oklch(var(--b3));
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+  max-width: 70%;
+}
+
+/* Own messages */
+.str-chat__message-simple--me .str-chat__message-simple-text-inner {
+  background: oklch(var(--p));
+  color: oklch(var(--pc));
+  margin-left: auto;
+}
+
+/* Message input */
+.str-chat__input-flat {
+  background: oklch(var(--b1));
+  border-top: 1px solid oklch(var(--b3));
+  padding: 1rem;
+}
+
+.str-chat__input-flat-wrapper {
+  background: oklch(var(--b2));
+  border: 1px solid oklch(var(--b3));
+  border-radius: 1.5rem;
+  padding: 0.5rem 1rem;
+}
+
+.str-chat__input-flat--textarea {
+  background: transparent;
+  border: none;
+  color: oklch(var(--bc));
+  resize: none;
+  outline: none;
+}
+
+.str-chat__input-flat--textarea:focus {
+  outline: none;
+}
+
+/* Send button */
+.str-chat__send-button {
+  background: oklch(var(--p));
+  color: oklch(var(--pc));
+  border: none;
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.str-chat__send-button:hover {
+  background: oklch(var(--p) / 0.8);
+}
+
+/* Scrollbar */
+.str-chat__list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.str-chat__list::-webkit-scrollbar-track {
+  background: oklch(var(--b2));
+}
+
+.str-chat__list::-webkit-scrollbar-thumb {
+  background: oklch(var(--b3));
+  border-radius: 3px;
+}
