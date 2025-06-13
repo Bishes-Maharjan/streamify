@@ -44,7 +44,8 @@
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "stream-chat": "^9.5.1",
-    "throttler": "^0.0.1"
+    "throttler": "^0.0.1",
+    "winston": "^3.17.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",

@@ -1,5 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-base-to-string */
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { Injectable, LoggerService } from '@nestjs/common';
 import { ensureDirSync } from 'fs-extra';
@@ -27,6 +28,7 @@ export class WinstonLoggerService implements LoggerService {
             : message;
         const details =
           typeof rest === 'object' ? JSON.stringify(rest, null, 2) : rest;
+
         return `\n[${timestamp}] [${level}]: ${msg}\nDetails: ${details} ${stack ? `\nStack:\n${stack}` : ''} \n`;
       }),
     ),
