@@ -6,7 +6,6 @@ const nextConfig: NextConfig = {
   // Add this for better error reporting
   productionBrowserSourceMaps: true,
   // Disable static optimization temporarily to debug
-  swcMinify: false,
 
   images: {
     unoptimized: true,
