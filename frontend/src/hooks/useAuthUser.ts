@@ -1,5 +1,6 @@
 import { axiosInstance } from '@/lib/axios';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 import { useEffect } from 'react';
 
 export const useAuthUser = () => {
@@ -26,11 +27,15 @@ export const useAuthUser = () => {
     // Disable query during SSR
     enabled: typeof window !== 'undefined',
     // Don't retry on auth failures
-    retry: (failureCount, error: any) => {
+    retry: (failureCount, error) => {
       // Don't retry on 401/403 errors (auth failures)
-      if (error?.response?.status === 401 || error?.response?.status === 403) {
-        return false;
-      }
+      if (isAxiosError(error))
+        if (
+          error?.response?.status === 401 ||
+          error?.response?.status === 403
+        ) {
+          return false;
+        }
       // Retry up to 2 times for other errors
       return failureCount < 2;
     },
