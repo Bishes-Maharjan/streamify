@@ -27,7 +27,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   const isHomePage = pathname === '/';
 
   // Define public routes that don't require authentication
-  const publicRoutes = ['/login', '/signup'];
+  const publicRoutes = ['/login', '/signup', '/about', '/contact', '/pricing'];
   const isPublicRoute = publicRoutes.includes(pathname);
 
   const shouldShowSidebar = !isAuthPage && !isChatPage && !isOnboardPage;
@@ -62,7 +62,6 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   // BUT only for known app routes, let unknown routes fall through to not-found
   const knownProtectedRoutes = [
     '/notifications',
-    '/',
     '/onboard',
     '/chat',
     '/friends',
