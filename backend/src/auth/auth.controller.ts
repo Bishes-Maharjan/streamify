@@ -45,9 +45,9 @@ export class AuthController {
       res.cookie('jwt', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
+        sameSite: 'none',
       });
-      console.log('process.env.FRONTEND_URL', process.env.FRONTEND_URL);
+
       res.redirect(process.env.FRONTEND_URL ?? 'http://localhost:3000');
     } catch (error) {
       console.error('Error in Google callback:', error);
@@ -76,7 +76,7 @@ export class AuthController {
     res.cookie('jwt', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      sameSite: 'none',
     });
 
     return res.status(201).json({ token, success: true });
@@ -91,7 +91,7 @@ export class AuthController {
     res.cookie('jwt', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      sameSite: 'none',
     });
 
     return res.status(201).json({ token, success: true });
@@ -106,7 +106,7 @@ export class AuthController {
     res.clearCookie('jwt', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      sameSite: 'none',
     });
     return res
       .status(201)
@@ -133,11 +133,9 @@ export class AuthController {
   @ApiOperation({ summary: 'Complete onboarding' })
   onboard(@Req() req: Irequest, @Body() onBoardingDto: OnBoardingDTO) {
     const { id, email } = req.user;
-    console.log(req.user);
 
     const { fullName, bio, nativeLanguage, learningLanguage, location } =
       onBoardingDto;
-    console.log(onBoardingDto);
 
     if (!fullName || !bio || !nativeLanguage || !learningLanguage || !location)
       throw new BadRequestException('Enter values for given fields');
