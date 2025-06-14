@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {
   BadRequestException,
   Body,
@@ -34,14 +35,20 @@ export class AuthController {
   @HttpCode(200)
   async googleAuthRedirect(@Req() req: Grequest, @Res() res: Response) {
     try {
+      console.log('=== GOOGLE CALLBACK START ===');
+      console.log('User from request:', req.user ? 'Present' : 'Missing');
+
       if (!req.user) {
         throw new Error('No user found in request');
       }
 
       const { user } = req;
+      console.log('Creating/updating user...');
 
       const token = await this.authService.createGoogleUser(user);
+      console.log('Token created:', token ? 'Success' : 'Failed');
 
+      // Set cookie with cross-origin settings
       res.cookie('jwt', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
@@ -49,19 +56,32 @@ export class AuthController {
         partitioned: true,
         maxAge: 24 * 60 * 60 * 1000,
       });
-      console.log(token, process.env.FRONTEND_URL);
-      res.redirect(process.env.FRONTEND_URL || 'http://localhost:3000');
-    } catch (error) {
-      console.error('Error in Google callback:', error);
 
-      // Send error page instead of JSON
+      // Redirect with success parameter
+      const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+      const redirectUrl = `${frontendUrl}?oauth_success=true`;
+
+      console.log('Redirecting to:', redirectUrl);
+      console.log('=== GOOGLE CALLBACK SUCCESS ===');
+
+      res.redirect(redirectUrl);
+    } catch (error) {
+      console.error('=== GOOGLE CALLBACK ERROR ===');
+      console.error('Error:', error.message);
+      console.error('Stack:', error.stack);
+
+      const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+      const errorRedirect = `${frontendUrl}/login?error=oauth_failed`;
+
       res.status(500).send(`
         <html>
           <body>
             <script>
-              window.location.href = '${process.env.FRONTEND_URL}/login?error=oauth_failed';
+              console.error('OAuth failed:', '${error.message}');
+              window.location.href = '${errorRedirect}';
             </script>
             <p>Authentication failed. Redirecting...</p>
+            <p>Error: ${error.message}</p>
           </body>
         </html>
       `);
