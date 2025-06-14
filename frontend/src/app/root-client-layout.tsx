@@ -2,8 +2,10 @@
 
 import { useAuth } from '@/auth/AuthProvider';
 import Navbar from '@/components/Navbar';
+import PageLoader from '@/components/PageLoader';
 import Sidebar from '@/components/Sidebar';
 import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import LoginPage from './login/page';
 import OnboardingPage from './onboard/page';
 import HomePage from './page';
@@ -11,6 +13,12 @@ import HomePage from './page';
 export default function Providers({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { user, isLoading } = useAuth();
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Prevent hydration mismatch by only rendering after mount
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Define page conditions
   const isAuthPage = ['/login', '/signup'].includes(pathname);
@@ -25,13 +33,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   const shouldShowSidebar = !isAuthPage && !isChatPage && !isOnboardPage;
   const shouldShowNavbar = !isAuthPage && !isOnboardPage; // Don't show navbar on onboarding
 
-  // Show loading state while auth is being determined
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-      </div>
-    );
+  // Show loading state while mounting or auth is being determined
+  if (!isMounted || isLoading) {
+    return <PageLoader />;
   }
 
   // For auth pages when user is not authenticated - allow access

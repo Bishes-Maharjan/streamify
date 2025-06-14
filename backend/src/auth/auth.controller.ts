@@ -48,7 +48,7 @@ export class AuthController {
         sameSite: 'lax',
       });
 
-      res.redirect('http://localhost:3000/');
+      res.redirect(process.env.FRONTEND_URL ?? 'http://localhost:3000');
     } catch (error) {
       console.error('Error in Google callback:', error);
 
