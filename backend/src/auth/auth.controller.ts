@@ -46,9 +46,11 @@ export class AuthController {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'none',
+        partitioned: true,
+        maxAge: 24 * 60 * 60 * 1000,
       });
-
-      res.redirect(process.env.FRONTEND_URL ?? 'http://localhost:3000');
+      console.log(token, process.env.FRONTEND_URL);
+      res.redirect(process.env.FRONTEND_URL || 'http://localhost:3000');
     } catch (error) {
       console.error('Error in Google callback:', error);
 
@@ -77,6 +79,8 @@ export class AuthController {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'none',
+      partitioned: true,
+      maxAge: 24 * 60 * 60 * 1000,
     });
 
     return res.status(201).json({ token, success: true });
@@ -92,6 +96,8 @@ export class AuthController {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'none',
+      partitioned: true,
+      maxAge: 24 * 60 * 60 * 1000,
     });
 
     return res.status(201).json({ token, success: true });
@@ -107,6 +113,8 @@ export class AuthController {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'none',
+      partitioned: true,
+      maxAge: 24 * 60 * 60 * 1000,
     });
     return res
       .status(201)
