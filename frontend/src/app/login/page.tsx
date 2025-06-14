@@ -2,8 +2,8 @@
 import { ShipWheelIcon } from 'lucide-react';
 import singUpImage from '../../../public/signup.png';
 
+import { useAuth } from '@/auth/AuthProvider';
 import { handleOAuthLogin } from '@/hooks/OAuth';
-import { useAuthUser } from '@/hooks/useAuthUser';
 import { axiosInstance } from '@/lib/axios';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
@@ -14,7 +14,7 @@ import { useEffect, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 
 const LoginPage = () => {
-  const { user, isLoading } = useAuthUser();
+  const { user, isLoading } = useAuth();
   const [isClient, setIsClient] = useState(false);
 
   const [loginData, setLoginData] = useState({
@@ -49,7 +49,7 @@ const LoginPage = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['auth-user'] });
       setTimeout(() => {
-        router.replace('/onboard');
+        router.replace('/');
       }, 500);
     },
     onError: () => {

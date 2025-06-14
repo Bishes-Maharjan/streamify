@@ -32,7 +32,7 @@ export const AuthProvider = ({
   const queryClient = useQueryClient();
 
   // Move hook call to the top - always call hooks in the same order
-  const { user, isLoading } = useAuthUser();
+  const { user = null, isLoading } = useAuthUser();
   console.log('Current user:', user);
 
   useEffect(() => {

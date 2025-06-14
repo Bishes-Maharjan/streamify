@@ -52,8 +52,13 @@ export class AuthController {
       res.cookie('jwt', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'none',
+        sameSite: 'lax',
         partitioned: true,
+        domain:
+          process.env.NODE_ENV === 'production'
+            ? 'https://streamify-frontend-t8hu.onrender.com/'
+            : undefined,
+
         maxAge: 24 * 60 * 60 * 1000,
       });
 
