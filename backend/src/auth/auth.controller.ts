@@ -70,7 +70,7 @@ export class AuthController {
             <script>
 setTimeout(() => {
   
-window.location.href = '${process.env.FRONTEND_URL}';
+window.location.href = '${frontendUrl}';
 }, 2000);
             </script>
 

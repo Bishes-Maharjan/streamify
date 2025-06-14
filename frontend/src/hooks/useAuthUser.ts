@@ -14,9 +14,7 @@ export const useAuthUser = () => {
     queryKey: ['auth-user'],
     queryFn: async () => {
       try {
-        const res = await axiosInstance.get('/auth/me', {
-          withCredentials: true,
-        });
+        const res = await axiosInstance.get('/auth/me');
         console.log(res, 900);
         return res.data;
       } catch (error) {
