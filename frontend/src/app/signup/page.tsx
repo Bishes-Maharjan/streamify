@@ -9,26 +9,46 @@ import { ShipWheelIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import singUpImage from '../../../public/signup.png';
 
 const SignUpPage = () => {
   const router = useRouter();
-  const { isLoading } = useAuthUser();
-  // useEffect(() => {
-  //   if (user) router.push('/');
-  // }, [user, isLoading, router]);
-  const idx = Math.floor(Math.random() * 100) + 1; // 1-100 included
+  const { user, isLoading } = useAuthUser();
+  const [isClient, setIsClient] = useState(false);
+
+  // Generate avatar index only on client side to avoid hydration mismatch
+  const [, setAvatarIdx] = useState(1);
 
   const [signupData, setSignupData] = useState({
     fullName: '',
     email: '',
     password: '',
-    image: `https://avatar.iran.liara.run/public/${idx}.png`,
+    image: '', // Will be set after client mounts
   });
 
   const [err, setErr] = useState<string | null>(null);
   const queryClient = useQueryClient();
+
+  // Handle client-side mounting
+  useEffect(() => {
+    setIsClient(true);
+    const idx = Math.floor(Math.random() * 100) + 1;
+    setAvatarIdx(idx);
+    setSignupData((prev) => ({
+      ...prev,
+      image: `https://avatar.iran.liara.run/public/${idx}.png`,
+    }));
+  }, []);
+
+  // Handle redirects only after client mount
+  useEffect(() => {
+    if (isClient && user?.isOnBoarded) {
+      router.replace('/');
+    } else if (isClient && user && !user.isOnBoarded) {
+      router.replace('/onboard');
+    }
+  }, [user, router, isClient]);
 
   const { mutate, isPending } = useMutation({
     mutationFn: async () => {
@@ -47,11 +67,21 @@ const SignUpPage = () => {
       }
     },
   });
-  const handleSingup = (e: { preventDefault: () => void }) => {
+
+  const handleSignup = (e: { preventDefault: () => void }) => {
     e.preventDefault();
     mutate();
   };
-  if (isLoading) return <PageLoader />;
+
+  // Show loading until client has mounted and auth state is determined
+  if (!isClient || isLoading) {
+    return <PageLoader />;
+  }
+
+  // Don't render signup form if user is already authenticated
+  if (user) {
+    return <PageLoader />;
+  }
 
   return (
     <div
@@ -77,7 +107,7 @@ const SignUpPage = () => {
           )}
 
           <div className="w-full">
-            <form onSubmit={handleSingup}>
+            <form onSubmit={handleSignup}>
               <div className="space-y-4">
                 <div>
                   <h2 className="text-xl font-semibold">Create an Account</h2>

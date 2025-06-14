@@ -88,6 +88,7 @@ export class AuthService {
       );
 
     const token = this.generateJwtToken(user.id, user.email);
+    console.log(token);
     return token;
   }
 

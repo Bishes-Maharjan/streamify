@@ -3,87 +3,93 @@
 import { useAuth } from '@/auth/AuthProvider';
 import Navbar from '@/components/Navbar';
 import Sidebar from '@/components/Sidebar';
-import { usePathname, useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
+import LoginPage from './login/page';
+import OnboardingPage from './onboard/page';
+import HomePage from './page';
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { user, isLoading } = useAuth();
-  const router = useRouter();
 
   // Define page conditions
   const isAuthPage = ['/login', '/signup'].includes(pathname);
   const isChatPage = pathname?.startsWith('/chat');
   const isOnboardPage = pathname?.startsWith('/onboard');
+  const isHomePage = pathname === '/';
+
+  // Define public routes that don't require authentication
+  const publicRoutes = ['/login', '/signup', '/about', '/contact', '/pricing'];
+  const isPublicRoute = publicRoutes.includes(pathname);
+
   const shouldShowSidebar = !isAuthPage && !isChatPage && !isOnboardPage;
-  const shouldShowNavbar = !isAuthPage && isOnboardPage;
+  const shouldShowNavbar = !isAuthPage && !isOnboardPage; // Don't show navbar on onboarding
 
-  // Handle redirects with useEffect instead of direct rendering
-  useEffect(() => {
-    if (isLoading) return; // Wait for auth to load
-
-    // Redirect logic
-    if (!user && !isAuthPage) {
-      router.push('/login');
-      return;
-    }
-
-    if (user && isAuthPage) {
-      router.push('/');
-      return;
-    }
-
-    if (user && !user.isOnBoarded && !isOnboardPage && !isAuthPage) {
-      router.push('/onboard');
-      return;
-    }
-  }, [user, isLoading, isAuthPage, isOnboardPage, router]);
-
-  // Show loading during auth check
+  // Show loading state while auth is being determined
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="loading loading-spinner loading-lg"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
       </div>
     );
   }
 
-  // For auth pages, render without any layout
-  if (isAuthPage) {
+  // For auth pages when user is not authenticated - allow access
+  if (isAuthPage && !user) {
     return <>{children}</>;
   }
 
-  // Don't render anything if redirecting
-  if (!user || (user && !user.isOnBoarded && !isOnboardPage)) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="loading loading-spinner loading-lg"></div>
-      </div>
-    );
+  // If user is authenticated but on auth pages - redirect to home
+  if (user && isAuthPage) {
+    return <HomePage />;
   }
 
-  // Render with sidebar layout
-  if (shouldShowSidebar) {
+  // If user is authenticated but not onboarded, and not on auth pages
+  if (user && user.isOnBoarded === false && !isAuthPage && !isOnboardPage) {
+    return <OnboardingPage />;
+  }
+
+  // For public routes, allow access regardless of auth status
+  if (isPublicRoute) {
+    return <>{children}</>;
+  }
+
+  // For protected routes, redirect to login if not authenticated
+  // BUT only for known app routes, let unknown routes fall through to not-found
+  const knownProtectedRoutes = ['/dashboard', '/profile', '/settings', '/chat'];
+  const isKnownProtectedRoute =
+    knownProtectedRoutes.some((route) => pathname.startsWith(route)) ||
+    isHomePage;
+
+  if (!user && isKnownProtectedRoute) {
+    return <LoginPage />;
+  }
+
+  // For unknown routes, let them pass through so not-found.tsx can handle them
+  if (!user && !isKnownProtectedRoute) {
+    return <>{children}</>;
+  }
+
+  // Render with sidebar layout for authenticated users on appropriate pages
+  if (shouldShowSidebar && user) {
     return (
-      <div className="grid grid-cols-[16rem_1fr] grid-rows-[auto_1fr] min-h-screen">
-        <div className="row-span-2 border-r border-base-300 bg-base-200">
-          <Sidebar />
-        </div>
-        <div className="col-start-2 row-start-1">
+      <div className="flex h-screen bg-gray-50">
+        <Sidebar />
+        <div className="flex-1 flex flex-col overflow-hidden">
           <Navbar />
-        </div>
-        <div className="col-start-2 row-start-2 p-4 overflow-auto">
-          {children}
+          <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50">
+            {children}
+          </main>
         </div>
       </div>
     );
   }
 
-  // Render without sidebar (for chat pages)
+  // Render without sidebar (for chat pages and onboarding)
   return (
-    <div className="flex flex-col min-h-screen">
-      {(shouldShowNavbar || isChatPage) && <Navbar />}
-      <div className="flex-1 overflow-auto p-4">{children}</div>
+    <div className="min-h-screen bg-gray-50">
+      {shouldShowNavbar && <Navbar />}
+      <div className={shouldShowNavbar ? 'pt-16' : ''}>{children}</div>
     </div>
   );
 }
