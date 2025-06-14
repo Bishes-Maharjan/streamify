@@ -53,11 +53,8 @@ export class AuthController {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
-        partitioned: true,
-        domain:
-          process.env.NODE_ENV === 'production' ? '.onrender.com' : undefined,
-
         maxAge: 24 * 60 * 60 * 1000,
+        path: '/',
       });
 
       // Redirect with success parameter
@@ -67,7 +64,20 @@ export class AuthController {
       console.log('Redirecting to:', redirectUrl);
       console.log('=== GOOGLE CALLBACK SUCCESS ===');
 
-      res.redirect(redirectUrl);
+      res.send(`
+        <html>
+          <body>
+            <script>
+setTimeout(() => {
+  
+window.location.href = '${process.env.FRONTEND_URL}';
+}, 2000);
+            </script>
+
+
+          </body>
+        </html>
+      `);
     } catch (error) {
       console.error('=== GOOGLE CALLBACK ERROR ===');
       console.error('Error:', error.message);
