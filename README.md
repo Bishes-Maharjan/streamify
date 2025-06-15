@@ -35,5 +35,9 @@ The remaining fields can be empty.
 NEXT_PUBLIC_STREAM_API_KEY= STREAM_API_KEY #Same as your backend getstream.io api key
 ```
 
+## Tech Stack
+
+Next and Nest
+
 Thats it.
 Signing off.
