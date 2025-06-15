@@ -1,7 +1,5 @@
 'use client';
 import { useAuthUser } from '@/hooks/useAuthUser';
-import { useLogout } from '@/hooks/useLogout';
-import { useQueryClient } from '@tanstack/react-query';
 import { createContext, useContext, useEffect, useState } from 'react';
 
 type User = {
@@ -28,11 +26,9 @@ export const AuthProvider = ({
   children: React.ReactNode;
 }>) => {
   const [isHydrated, setIsHydrated] = useState(false);
-  const queryClient = useQueryClient();
 
   // Move hook call to the top - always call hooks in the same order
   const { user, isLoading }: { user: User; isLoading: boolean } = useAuthUser();
-  const { logout } = useLogout();
 
   useEffect(() => {
     setIsHydrated(true);
