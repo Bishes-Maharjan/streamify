@@ -1,3 +1,7 @@
+### Live at <a href='https://streamify-frontend-t8hu.onrender.com/'> Render </a>
+
+If not, contact me or try it locally
+
 ## About
 
 A small project to use getstream.io for video calling and chatting. My first attempt towards it so the user qol isnt great. I could have implemented a mailer module to check the users email authenticity but decided not to because I wanted any one to come and try this without needing an authentic email
