@@ -39,6 +39,5 @@ export const rejectFriendRequest = async (id: string) => {
 
 export const getStreamToken = async () => {
   const res = await axiosInstance.get('chat/token');
-  console.log('res', res);
   return res.data;
 };

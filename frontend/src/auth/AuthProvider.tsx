@@ -1,5 +1,6 @@
 'use client';
 import { useAuthUser } from '@/hooks/useAuthUser';
+import { useLogout } from '@/hooks/useLogout';
 import { useQueryClient } from '@tanstack/react-query';
 import { createContext, useContext, useEffect, useState } from 'react';
 
@@ -17,8 +18,6 @@ type User = {
 type AuthContextType = {
   user: User;
   isLoading: boolean;
-  loginWithGoogle: () => void;
-  logout: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -32,36 +31,12 @@ export const AuthProvider = ({
   const queryClient = useQueryClient();
 
   // Move hook call to the top - always call hooks in the same order
-  const { user = null, isLoading } = useAuthUser();
-  console.log('Current user:', user);
+  const { user, isLoading }: { user: User; isLoading: boolean } = useAuthUser();
+  const { logout } = useLogout();
 
   useEffect(() => {
     setIsHydrated(true);
   }, []);
-
-  const loginWithGoogle = () => {
-    // Set flag to track OAuth flow
-    sessionStorage.setItem('oauth_in_progress', 'true');
-
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-    window.location.href = `${apiUrl}/auth/google`;
-  };
-
-  const logout = async () => {
-    try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-      await fetch(`${apiUrl}/auth/logout`, {
-        method: 'POST',
-        credentials: 'include',
-      });
-
-      // Clear React Query cache
-      queryClient.invalidateQueries({ queryKey: ['auth-user'] });
-      queryClient.clear();
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
-  };
 
   // During SSR or before hydration, return safe defaults
   if (!isHydrated) {
@@ -70,8 +45,6 @@ export const AuthProvider = ({
         value={{
           user: null,
           isLoading: true,
-          loginWithGoogle: () => {},
-          logout: async () => {},
         }}
       >
         {children}
@@ -84,8 +57,6 @@ export const AuthProvider = ({
       value={{
         user,
         isLoading,
-        loginWithGoogle,
-        logout,
       }}
     >
       {children}

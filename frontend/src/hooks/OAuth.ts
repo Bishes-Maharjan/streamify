@@ -1,4 +1,7 @@
 export const handleOAuthLogin = () => {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-  window.location.href = `${apiUrl}/auth/google`;
+  const backendUrl =
+    (process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001') +
+    '/auth/google';
+
+  window.location.href = backendUrl;
 };

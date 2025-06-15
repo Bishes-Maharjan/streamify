@@ -26,7 +26,7 @@ export class AuthService {
     private streamClient: StreamService,
   ) {}
 
-  async singup(userDto: SignUpDTO) {
+  async signup(userDto: SignUpDTO) {
     const existingUser = await this.userModel.findOne({
       email: userDto.email,
       isDeleted: false,
@@ -47,7 +47,7 @@ export class AuthService {
     return this.generateJwtToken(user.id, user.email);
   }
 
-  async sigin(userDto: SignInDTO) {
+  async signin(userDto: SignInDTO) {
     const user = await this.userModel.findOne({ email: userDto.email });
     if (!user) throw new NotFoundException('User Doesnt Exist');
     if (!user.password)
@@ -88,7 +88,7 @@ export class AuthService {
       );
 
     const token = this.generateJwtToken(user.id, user.email);
-    console.log(token);
+
     return token;
   }
 

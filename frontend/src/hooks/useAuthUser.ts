@@ -15,7 +15,7 @@ export const useAuthUser = () => {
     queryFn: async () => {
       try {
         const res = await axiosInstance.get('/auth/me');
-        console.log(res, 900);
+
         return res.data;
       } catch (error) {
         console.error('Auth query failed:', error);

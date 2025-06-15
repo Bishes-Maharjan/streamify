@@ -142,7 +142,6 @@ export class UserService {
     const senderDocument = await this.userModel.findById(sender);
     if (!senderDocument) throw new NotFoundException('The user doesnt exist');
 
-    console.log('Request accepted');
     return {
       message: `Friend request from ${senderDocument.fullName} accepted`,
     };

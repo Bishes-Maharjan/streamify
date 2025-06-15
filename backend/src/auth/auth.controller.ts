@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Response } from 'express';
+import { CookieOptions, Response } from 'express';
 import { Grequest, Irequest } from 'src/globals/Req.dto';
 import { OnBoardingDTO, SignInDTO, SignUpDTO } from 'src/user/dtos/user.dto';
 import { AuthService } from './auth.service';
@@ -23,6 +23,14 @@ import { JwtGuard } from './guard/jwtGuard';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  private cookieSetting: CookieOptions = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV == 'production' ? 'none' : 'lax',
+    domain: process.env.NODE_ENV == 'production' ? '.on.render.com' : undefined,
+    maxAge: 24 * 60 * 60 * 1000,
+    path: '/',
+  };
   @UseGuards(AuthGuard('google'))
   @HttpCode(200)
   @Get('google')
@@ -49,13 +57,7 @@ export class AuthController {
       console.log('Token created:', token ? 'Success' : 'Failed');
 
       // Set cookie with cross-origin settings
-      res.cookie('jwt', token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        maxAge: 24 * 60 * 60 * 1000,
-        path: '/',
-      });
+      res.cookie('jwt', token, this.cookieSetting);
 
       // Redirect with success parameter
       const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
@@ -64,20 +66,7 @@ export class AuthController {
       console.log('Redirecting to:', redirectUrl);
       console.log('=== GOOGLE CALLBACK SUCCESS ===');
 
-      res.send(`
-        <html>
-          <body>
-            <script>
-setTimeout(() => {
-  
-window.location.href = '${frontendUrl}';
-}, 2000);
-            </script>
-
-
-          </body>
-        </html>
-      `);
+      res.redirect(`${frontendUrl}/oauth-success?token=${token}`);
     } catch (error) {
       console.error('=== GOOGLE CALLBACK ERROR ===');
       console.error('Error:', error.message);
@@ -105,16 +94,10 @@ window.location.href = '${frontendUrl}';
   @ApiOperation({ summary: 'Register API' })
   @HttpCode(201)
   @Post('signup')
-  async singup(@Body() userDto: SignUpDTO, @Res() res: Response) {
-    const token = await this.authService.singup(userDto);
+  async signup(@Body() userDto: SignUpDTO, @Res() res: Response) {
+    const token = await this.authService.signup(userDto);
 
-    res.cookie('jwt', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'none',
-      partitioned: true,
-      maxAge: 24 * 60 * 60 * 1000,
-    });
+    res.cookie('jwt', token, this.cookieSetting);
 
     return res.status(201).json({ token, success: true });
   }
@@ -123,15 +106,9 @@ window.location.href = '${frontendUrl}';
   @ApiOperation({ summary: 'Login API' })
   @Post('signin')
   async signin(@Body() userDto: SignInDTO, @Res() res: Response) {
-    const token = await this.authService.sigin(userDto);
+    const token = await this.authService.signin(userDto);
 
-    res.cookie('jwt', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'none',
-      partitioned: true,
-      maxAge: 24 * 60 * 60 * 1000,
-    });
+    res.cookie('jwt', token, this.cookieSetting);
 
     return res.status(201).json({ token, success: true });
   }
@@ -142,15 +119,9 @@ window.location.href = '${frontendUrl}';
   @HttpCode(200)
   @ApiOperation({ summary: 'Logout' })
   logout(@Res() res: Response) {
-    res.clearCookie('jwt', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'none',
-      partitioned: true,
-      maxAge: 24 * 60 * 60 * 1000,
-    });
+    res.clearCookie('jwt', this.cookieSetting);
     return res
-      .status(201)
+      .status(200)
       .json({ success: true, message: 'Successfully Logged out' });
   }
 

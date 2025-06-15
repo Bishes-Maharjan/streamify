@@ -53,7 +53,6 @@ const LoginPage = () => {
       }, 500);
     },
     onError: () => {
-      console.log(error);
       if (error && isAxiosError(error)) {
         toast.error(error.response?.data.message);
       }
@@ -178,7 +177,7 @@ const LoginPage = () => {
 
                   <button
                     type="button"
-                    onClick={handleOAuthLogin}
+                    onClick={() => handleOAuthLogin()}
                     className="btn w-full border border-gray-300 bg-white hover:bg-gray-100 text-gray-800 flex items-center justify-center gap-2"
                   >
                     <Image

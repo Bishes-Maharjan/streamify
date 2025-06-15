@@ -27,7 +27,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   const isHomePage = pathname === '/';
 
   // Define public routes that don't require authentication
-  const publicRoutes = ['/login', '/signup', '/about', '/contact', '/pricing'];
+  const publicRoutes = ['/login', '/signup', '/oauth-success'];
   const isPublicRoute = publicRoutes.includes(pathname);
 
   const shouldShowSidebar = !isAuthPage && !isChatPage && !isOnboardPage;
