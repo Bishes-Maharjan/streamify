@@ -56,9 +56,6 @@ export class AuthController {
       const token = await this.authService.createGoogleUser(user);
       console.log('Token created:', token ? 'Success' : 'Failed');
 
-      // Set cookie with cross-origin settings
-      res.cookie('jwt', token, this.cookieSetting);
-
       // Redirect with success parameter
       const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
       const redirectUrl = `${frontendUrl}?oauth_success=true`;
@@ -152,5 +149,15 @@ export class AuthController {
     if (!fullName || !bio || !nativeLanguage || !learningLanguage || !location)
       throw new BadRequestException('Enter values for given fields');
     return this.authService.onboard(id, email, onBoardingDto);
+  }
+
+  @Post('set-cookie')
+  @ApiOperation({ summary: 'cookie redirect for oauth' })
+  setCookie(@Body() body: { token: string }, @Res() res: Response) {
+    const { token } = body;
+    if (token) res.cookie('jwt', token, this.cookieSetting);
+    return res
+      .status(200)
+      .json({ success: true, message: 'Successfully Logged in' });
   }
 }

@@ -1,32 +1,43 @@
 'use client';
 import PageLoader from '@/components/PageLoader';
+import { axiosInstance } from '@/lib/axios';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
 function Page() {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+  const queryClient = useQueryClient();
+
+  const { mutate: setCookieMutate } = useMutation({
+    mutationFn: async (token: string) => {
+      const res = await axiosInstance.post('auth/set-cookie', { token });
+      return res.data;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['auth-user'] });
+      toast.success(data.message);
+      setTimeout(() => {
+        router.push('/');
+      }, 1500);
+    },
+    onError: () => {
+      toast.error('Something went wrong. Try again.');
+      setIsLoading(false);
+    },
+  });
+
   useEffect(() => {
-    setIsLoading(true);
     const token = new URLSearchParams(window.location.search).get('token');
     if (token) {
-      fetch('/api/set-cookie', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ token }),
-      })
-        .then(() => {
-          router.push('/');
-        })
-        .catch(() => {
-          toast.error('Something went wrong. Try again later');
-        });
-      setIsLoading(true);
+      setCookieMutate(token);
+    } else {
+      setIsLoading(false);
     }
-  });
+  }, [setCookieMutate]);
+
   if (isLoading) return <PageLoader />;
   return <div></div>;
 }

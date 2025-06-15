@@ -94,7 +94,7 @@ export class AuthService {
 
   async getMe(id: string) {
     const user = await this.userModel.findById(id);
-    if (!user) throw new NotFoundException('User not found');
+    if (!user) return { message: 'Unauthenticated' };
     return user;
   }
 
