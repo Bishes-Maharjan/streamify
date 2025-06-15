@@ -6,6 +6,8 @@ A small project to use getstream.io for video calling and chatting. My first att
 
 To run this project in your own local device you would need to copy the both env files to .env of their respective folder
 
+## Setup ENVs
+
 ### Backend
 
 Visit <a href='https://getstream.io/'> getstream.io </a> for
@@ -33,6 +35,28 @@ The remaining fields can be empty.
 
 ```bash
 NEXT_PUBLIC_STREAM_API_KEY= STREAM_API_KEY #Same as your backend getstream.io api key
+```
+
+## To run
+
+DO NOT CHANGE THE PORT IN BACKEND FROM 3001
+MAKE SURE TO RUN THE NEXT APP ON localhost:3000 , it will run in 3000 at default but if not be sure to add that port in main.ts of the backend in the enableCors origin.
+
+In your terminal, open the repo
+then
+
+```bash
+mv backend.env.example.txt backend/.env
+cd backend
+pnpm install && pnpm start dev
+```
+
+open another terminal
+
+```bash
+mv frontend.env.example.txt frontend/.env
+cd frontend
+pnpm install && pnpm dev
 ```
 
 ## Tech Stack
