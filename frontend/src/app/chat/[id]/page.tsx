@@ -23,7 +23,7 @@ import { StreamChat } from 'stream-chat';
 import ChatLoader from '@/components/ChatLoader';
 import { useAuthUser } from '@/hooks/useAuthUser';
 import { User } from '@/interfaces/allInterface';
-import { getStreamToken } from '@/lib/friend.api';
+import { getStreamToken, getUser } from '@/lib/friend.api';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -38,7 +38,11 @@ const ChatPage = () => {
   const audioChunksRef = useRef<Blob[]>([]);
 
   const { user: authUser }: { user: User } = useAuthUser();
-
+  const {data: getuser} = useQuery({
+    queryKey: ['user', targetUserId],
+    queryFn: ()=> getUser(targetUserId),
+  })
+ 
   const [chatClient, setChatClient] = useState<StreamChatType | null>(null);
   const [channel, setChannel] = useState<ChannelType | null>(null);
   const [messages, setMessages] = useState<LocalMessage[]>([]);
@@ -53,7 +57,7 @@ const ChatPage = () => {
     queryKey: ['streamToken'],
     queryFn: getStreamToken,
   });
-
+ 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -472,7 +476,7 @@ const ChatPage = () => {
         <div className="flex items-center justify-between p-4">
           <div className="flex items-center gap-3">
             {/* Back Button */}
-            <Link href="/dashboard" className="btn btn-ghost btn-circle btn-sm">
+            <Link href="/" className="btn btn-ghost btn-circle btn-sm">
               <ArrowLeftIcon className="h-5 w-5" />
             </Link>
 
@@ -483,7 +487,7 @@ const ChatPage = () => {
                   <Image
                     fill
                     sizes="80px"
-                    src={`https://ui-avatars.com/api/?name=${targetUserId}&background=random`}
+                    src={`${getuser.image}`}
                     alt="User"
                     className="rounded-full"
                   />
@@ -491,12 +495,9 @@ const ChatPage = () => {
               </div>
               <div>
                 <h3 className="font-semibold text-base-content text-sm">
-                  Chat Partner
+                  {getuser.fullName}
                 </h3>
-                <p className="text-xs text-success flex items-center gap-1">
-                  <span className="w-2 h-2 bg-success rounded-full"></span>
-                  Online
-                </p>
+          
               </div>
             </div>
           </div>

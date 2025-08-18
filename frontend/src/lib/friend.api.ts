@@ -1,3 +1,4 @@
+import { User } from 'stream-chat';
 import { axiosInstance } from './axios';
 
 export const getOutgoingFriendReqs = async () => {
@@ -41,3 +42,9 @@ export const getStreamToken = async () => {
   const res = await axiosInstance.get('chat/token');
   return res.data;
 };
+
+export const getUser = async (id: string) => {
+  const res = await axiosInstance.get(`/user/${id}`);
+
+  return res.data;
+}
