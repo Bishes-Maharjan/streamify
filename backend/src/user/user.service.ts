@@ -159,4 +159,10 @@ export class UserService {
 
     return { message: `Friend Request from ${sender?.fullName} rejected` };
   }
+
+  async getUserById(id: string) {
+    const user = await this.userModel.findById(id);
+
+    return user;
+  }
 }

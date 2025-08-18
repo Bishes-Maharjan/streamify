@@ -89,4 +89,12 @@ export class UserController {
   getOutGoingFriendRequest(@Req() { user: { id } }: Irequest) {
     return this.userService.getOutGoingFriendRequest(id);
   }
+
+  @Get(':id')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Get user' })
+  async getUser(@Param('id') id: string) {
+    const user = await this.userService.getUserById(id);
+    return user;
+  }
 }
