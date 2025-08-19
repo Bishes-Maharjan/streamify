@@ -1,4 +1,4 @@
-import { User } from 'stream-chat';
+
 import { axiosInstance } from './axios';
 
 export const getOutgoingFriendReqs = async () => {
