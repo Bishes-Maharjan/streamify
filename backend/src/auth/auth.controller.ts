@@ -42,25 +42,16 @@ export class AuthController {
   @HttpCode(200)
   async googleAuthRedirect(@Req() req: Grequest, @Res() res: Response) {
     try {
-      console.log('=== GOOGLE CALLBACK START ===');
-      console.log('User from request:', req.user ? 'Present' : 'Missing');
-
       if (!req.user) {
         throw new Error('No user found in request');
       }
 
       const { user } = req;
-      console.log('Creating/updating user...');
 
       const token = await this.authService.createGoogleUser(user);
-      console.log('Token created:', token ? 'Success' : 'Failed');
 
       // Redirect with success parameter
       const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
-      const redirectUrl = `${frontendUrl}?oauth_success=true`;
-
-      console.log('Redirecting to:', redirectUrl);
-      console.log('=== GOOGLE CALLBACK SUCCESS ===');
 
       res.redirect(`${frontendUrl}/oauth-success?token=${token}`);
     } catch (error) {

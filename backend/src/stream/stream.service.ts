@@ -16,7 +16,7 @@ export class StreamService implements OnModuleInit {
   // Create or update a user in Stream
   async upsertUser(user: { id: string; name?: string; image?: string }) {
     const result = await this.client.upsertUser(user);
-    if (!result) console.log(result);
+    if (!result) throw new Error(result);
     return result;
   }
 

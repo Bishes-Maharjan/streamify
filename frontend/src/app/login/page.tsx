@@ -16,6 +16,7 @@ import toast, { Toaster } from 'react-hot-toast';
 const LoginPage = () => {
   const { user, isLoading } = useAuth();
   const [isClient, setIsClient] = useState(false);
+  
 
   const [loginData, setLoginData] = useState({
     email: '',
@@ -52,10 +53,14 @@ const LoginPage = () => {
         router.replace('/');
       }, 500);
     },
-    onError: () => {
-      if (error && isAxiosError(error)) {
-        toast.error(error.response?.data.message);
-      }
+    onError: (error) => {
+    const msg = isAxiosError(error)
+  ? Array.isArray(error.response?.data?.message)
+    ? error.response?.data?.message.join("\n") // join with newlines
+    : error.response?.data?.message
+  : error?.message || "Something went wrong!";
+
+toast.error(msg);
     },
   });
 
@@ -137,13 +142,16 @@ const LoginPage = () => {
                       className="input input-bordered w-full"
                       value={loginData.password}
                       onChange={(e) =>
-                        setLoginData({
+                        {setLoginData({
                           ...loginData,
                           password: e.target.value,
-                        })
+                        });
+
+                      }
                       }
                       required
                     />
+                       
                   </div>
 
                   <button

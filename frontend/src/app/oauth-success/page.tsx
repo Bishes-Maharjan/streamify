@@ -36,7 +36,7 @@ function Page() {
     } else {
       setIsLoading(false);
     }
-  }, [setCookieMutate]);
+  }, []);
 
   if (isLoading) return <PageLoader />;
   return <div></div>;

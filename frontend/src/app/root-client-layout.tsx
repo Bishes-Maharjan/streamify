@@ -97,9 +97,11 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 
   // Render without sidebar (for chat pages and onboarding)
   return (
-    <div className="min-h-screen bg-gray-50">
-      {shouldShowNavbar && <Navbar />}
-      <div className={shouldShowNavbar ? 'pt-16' : ''}>{children}</div>
+ <div className="flex flex-col min-h-screen bg-gray-50">
+    {shouldShowNavbar && <Navbar />}
+    <div className="flex-1 overflow-hidden">
+      {children}
     </div>
+  </div>
   );
 }

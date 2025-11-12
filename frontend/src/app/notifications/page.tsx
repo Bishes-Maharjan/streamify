@@ -46,7 +46,7 @@ const NotificationsPage = () => {
       }
     },
   });
-  console.log(error);
+
   const { mutate: rejectRequestMutation, isPending: isRejectPending } =
     useMutation({
       mutationFn: rejectFriendRequest,

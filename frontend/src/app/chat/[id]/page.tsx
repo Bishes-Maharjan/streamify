@@ -461,7 +461,7 @@ const ChatPage = () => {
   const messageGroups = groupMessagesByDate(messages);
 
   return (
-    <div className="flex flex-col h-screen bg-base-100">
+    <div className="flex flex-col h-[calc(100vh-64px)] bg-base-100 overflow-hidden">
       {/* Hidden file input */}
       <input
         type="file"
@@ -471,8 +471,8 @@ const ChatPage = () => {
         className="hidden"
       />
 
-      {/* Chat Header - Fixed positioning relative to viewport */}
-      <div className="sticky top-16 z-40 bg-base-100/95 backdrop-blur-sm border-b border-base-200 shadow-sm">
+
+      <div className="flex-shrink-0 bg-base-100/95 backdrop-blur-sm border-b border-base-200 shadow-sm">
         <div className="flex items-center justify-between p-4">
           <div className="flex items-center gap-3">
             {/* Back Button */}
@@ -481,7 +481,7 @@ const ChatPage = () => {
             </Link>
 
             {/* User Info */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1">
               <div className="avatar">
                 <div className="w-10 h-10 rounded-full ring-2 ring-base-300">
                   <Image

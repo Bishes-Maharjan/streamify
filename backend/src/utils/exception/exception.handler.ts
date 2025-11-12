@@ -47,7 +47,15 @@ export class ExceptionHandler implements ExceptionFilter {
       userAgent,
       stack,
     });
-
+    console.log({
+      statusCode,
+      method,
+      url,
+      message,
+      ip,
+      userAgent,
+      stack,
+    });
     response.status(statusCode).json({
       success: false,
       statusCode,

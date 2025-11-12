@@ -9,16 +9,41 @@ import { ShipWheelIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import singUpImage from '../../../public/signup.png';
+import toast, { Toaster } from 'react-hot-toast';
 
 const SignUpPage = () => {
   const router = useRouter();
   const { user, isLoading } = useAuthUser();
   const [isClient, setIsClient] = useState(false);
+   const [password, setPassword] = useState("");
+   const [checksUI, setChecksUI] = useState(false);
+     const inputRef = useRef<HTMLInputElement>(null);
+
+  const checks = {
+    length: password.length >= 8,
+    upper: /[A-Z]/.test(password),
+    lower: /[a-z]/.test(password),
+    number: /\d/.test(password),
+    symbol: /[!@#$%^&*(),.?":{}|<>]/.test(password),
+  };
 
   // Generate avatar index only on client side to avoid hydration mismatch
   const [, setAvatarIdx] = useState(1);
+  // Click outside handler
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (inputRef.current && !inputRef.current.contains(event.target as Node)) {
+        setChecksUI(false); // hide checklist
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const [signupData, setSignupData] = useState({
     fullName: '',
@@ -60,11 +85,13 @@ const SignUpPage = () => {
       router.push('/onboard');
     },
     onError: (error) => {
-      if (isAxiosError(error)) {
-        setErr(error.response?.data.message);
-      } else {
-        setErr('Something went wrong. Please try again.');
-      }
+     const msg = isAxiosError(error)
+      ? Array.isArray(error.response?.data?.message)
+        ? error.response?.data?.message.join("\n") // join with newlines
+        : error.response?.data?.message
+      : error?.message || "Something went wrong!";
+    
+    toast.error(msg);
     },
   });
 
@@ -88,6 +115,7 @@ const SignUpPage = () => {
       className="h-screen flex items-center justify-center p-4 sm:p-6 md:p-8"
       data-theme="forest"
     >
+      <Toaster/>
       <div className="border border-primary/25 flex flex-col lg:flex-row w-full max-w-5xl mx-auto bg-base-100 rounded-xl shadow-lg overflow-hidden">
         {/* SIGNUP FORM - LEFT SIDE */}
         <div className="w-full lg:w-1/2 p-4 sm:p-8 flex flex-col">
@@ -146,11 +174,12 @@ const SignUpPage = () => {
                       placeholder="john@gmail.com"
                       className="input input-bordered w-full"
                       value={signupData.email}
-                      onChange={(e) =>
+                      onChange={(e) => 
                         setSignupData({
                           ...signupData,
                           email: e.target.value,
                         })
+                        
                       }
                       required
                     />
@@ -161,21 +190,41 @@ const SignUpPage = () => {
                       <span className="label-text">Password</span>
                     </label>
                     <input
+                    ref = {inputRef}
                       type="password"
                       placeholder="********"
                       className="input input-bordered w-full"
                       value={signupData.password}
-                      onChange={(e) =>
+                      onChange={(e) =>{
                         setSignupData({
                           ...signupData,
                           password: e.target.value,
                         })
+                        setPassword(e.target.value) } 
                       }
+                      onKeyDown={()=> setChecksUI(true)}
+                      
                       required
                     />
-                    <p className="text-xs opacity-70 mt-1">
-                      Password must be at least 6 characters long
-                    </p>
+                    {checksUI &&
+                       (<ul className="mt-2 text-sm">
+        <li className={checks.length ? "text-green-500" : "text-red-500"}>
+          • At least 8 characters
+        </li>
+        <li className={checks.upper ? "text-green-500" : "text-red-500"}>
+          • At least 1 uppercase letter
+        </li>
+        <li className={checks.lower ? "text-green-500" : "text-red-500"}>
+          • At least 1 lowercase letter
+        </li>
+        <li className={checks.number ? "text-green-500" : "text-red-500"}>
+          • At least 1 number
+        </li>
+        <li className={checks.symbol ? "text-green-500" : "text-red-500"}>
+          • At least 1 special character
+        </li>
+      </ul>)
+      }
                   </div>
 
                   <div className="form-control">
