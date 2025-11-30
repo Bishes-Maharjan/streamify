@@ -38,13 +38,6 @@ The application prioritizes functionality and ease of testing, offering a stream
 
 ## ✨ Core Features (Preserved from Original)
 
-### Social Features
-- 👤 User Profiles with bio and avatar
-- 👥 Follow/Unfollow system
-- 📊 Follower and following lists
-- 🔍 User discovery ("Who to Follow")
-- 📱 Responsive design
-
 ### Communication Features
 - 📹 HD Video Calling (Stream Video API)
 - 💬 Real-time Chat (Stream Chat API)
