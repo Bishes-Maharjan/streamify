@@ -10,48 +10,50 @@ A modern, feature-rich social media platform **migrated from React/Express to Ne
 
 ## 📋 Description
 
-Social Connect is a full-stack social media application originally built with React and Express, which I **completely migrated to Next.js and NestJS** for improved performance, better developer experience, and modern architecture patterns. The platform combines traditional social networking features with real-time communication capabilities powered by Stream's APIs.
+Social Connect is a full-stack social media application that I **completely migrated from React/Express to Next.js/NestJS** for improved performance, better developer experience, and modern architecture patterns. The platform combines traditional social networking features with real-time communication capabilities powered by Stream's APIs.
 
-### Key Capabilities:
-- **Real-time video calling** for face-to-face conversations
-- **Instant messaging** with Stream's chat infrastructure
-- **Social networking** with follow/follower relationships
-- **User discovery** through an intelligent "Who to Follow" recommendation system
-- **Profile management** with detailed follower/following views
-- **Authentication** via Google OAuth for seamless onboarding
+This project demonstrates a successful framework migration while maintaining all original functionality including real-time video calling, instant messaging, social networking with follow/follower relationships, and user discovery features.
 
 The application prioritizes functionality and ease of testing, offering a streamlined authentication process without email verification requirements.
 
-## ✨ What I Built
+## 🔄 Migration Work
 
-### 🔄 Framework Migration
-**From React/Express → Next.js/NestJS**
+### What I Did
+
+**Complete Framework Migration: React/Express → Next.js/NestJS**
 
 - ✅ Migrated entire frontend from React (CRA/Vite) to **Next.js 14** with App Router
-- ✅ Refactored backend from Express to **NestJS** with proper module architecture
-- ✅ Implemented server-side rendering and API routes in Next.js
-- ✅ Restructured backend with NestJS modules, controllers, and services
-- ✅ Maintained all original functionality while improving code organization
+- ✅ Refactored complete backend from Express to **NestJS** with proper module architecture
+- ✅ Implemented server-side rendering capabilities with Next.js
+- ✅ Restructured backend with NestJS modules, controllers, services, and guards
+- ✅ Converted all API routes to NestJS controller endpoints
+- ✅ Updated authentication flow for NestJS Passport integration
+- ✅ Migrated database models to NestJS/Mongoose schemas
+- ✅ Refactored all React components to Next.js App Router patterns
+- ✅ Updated state management to work with Next.js architecture
+- ✅ Maintained 100% feature parity with original application
+- ✅ Improved code organization and type safety throughout
 
-### 🎯 Custom Features Added
+**No additional features were added** - this was a pure migration project focused on modernizing the tech stack.
 
-Beyond the migration, I implemented two major enhancements:
+## ✨ Core Features (Preserved from Original)
 
-#### 1. **Follower/Following Profile Viewer**
-View complete lists of followers and following directly from user profile pages:
-- Dedicated tabs for followers and following lists
-- Real-time updates when follow relationships change
-- User cards with quick follow/unfollow actions
-- Click-through navigation to individual profiles
-- Responsive design for mobile and desktop
+### Social Features
+- 👤 User Profiles with bio and avatar
+- 👥 Follow/Unfollow system
+- 📊 Follower and following lists
+- 🔍 User discovery ("Who to Follow")
+- 📱 Responsive design
 
-#### 2. **Enhanced User Discovery (Load More)**
-Improved "Who to Follow" component with pagination:
-- **Load More** button to fetch additional user recommendations
-- Prevents duplicate suggestions
-- Filters out already-followed users
-- Smooth loading states and error handling
-- Optimized API calls to reduce server load
+### Communication Features
+- 📹 HD Video Calling (Stream Video API)
+- 💬 Real-time Chat (Stream Chat API)
+- 🔔 Notifications
+
+### Authentication
+- 🔐 Google OAuth integration
+- 🔑 JWT token management
+- 🛡️ Protected routes
 
 ## 🛠️ Tech Stack
 
@@ -193,15 +195,13 @@ social-connect/
 ├── frontend/                  # Next.js application
 │   ├── app/                  # App Router pages
 │   ├── components/           # Reusable components
-│   │   ├── WhoToFollow.tsx  # Enhanced with load more
-│   │   └── ...
 │   ├── lib/                  # Utilities and helpers
 │   └── public/               # Static assets
 │
 ├── backend/                   # NestJS application
 │   ├── src/
 │   │   ├── auth/             # Authentication module
-│   │   ├── users/            # Users module (with follow features)
+│   │   ├── users/            # Users module
 │   │   ├── stream/           # Stream integration
 │   │   └── main.ts           # Application entry
 │   └── ...
@@ -209,7 +209,7 @@ social-connect/
 └── README.md
 ```
 
-## 🎨 Features Breakdown
+## 🎨 Features
 
 ### User Management
 - Register/Login with Google OAuth
@@ -219,10 +219,9 @@ social-connect/
 
 ### Social Features
 - Follow/Unfollow users
-- View followers list from profile
-- View following list from profile
+- View followers and following lists
 - User search and discovery
-- Load more users in recommendations
+- "Who to Follow" recommendations
 
 ### Communication
 - One-on-one video calls
@@ -268,24 +267,26 @@ pnpm lint         # Lint code
 
 ## 🤝 Contributing
 
-This is a learning project showcasing framework migration and feature development. Feel free to:
+This is a learning project showcasing framework migration. Feel free to:
 - Report bugs
-- Suggest new features
+- Suggest improvements
 - Submit pull requests
 - Use as reference for your own migrations
 
 ## 📚 What I Learned
 
-Through this migration project, I gained experience with:
+Through this migration project, I gained hands-on experience with:
 
-- **Framework Migration**: Successfully migrating a full application between major frameworks
-- **Next.js App Router**: Modern Next.js patterns and server components
-- **NestJS Architecture**: Modular backend design with dependency injection
-- **API Design**: RESTful endpoints and real-time integrations
-- **Database Management**: MongoDB schemas and Mongoose ODM
-- **Authentication**: OAuth flows and JWT token management
-- **Real-time Features**: WebRTC video calls and WebSocket chat
-- **Deployment**: Full-stack deployment on Render
+- **Framework Migration**: Successfully migrating a complete full-stack application between major frameworks
+- **Next.js App Router**: Modern Next.js patterns, server components, and routing
+- **NestJS Architecture**: Modular backend design with dependency injection and decorators
+- **Type Safety**: Leveraging TypeScript across the entire stack
+- **API Design**: Converting Express routes to NestJS controllers
+- **Database Management**: Adapting Mongoose schemas to NestJS modules
+- **Authentication**: Implementing Passport.js in NestJS context
+- **Real-time Features**: Maintaining WebRTC video calls and WebSocket chat during migration
+- **Code Organization**: Improving project structure and maintainability
+- **Deployment**: Deploying migrated full-stack applications
 
 ## 📄 License
 
@@ -293,9 +294,9 @@ This project is open source and available under the MIT License.
 
 ## 🙏 Acknowledgments
 
-- Original tutorial that inspired this project
-- Stream.io for their excellent APIs
-- The Next.js and NestJS communities
+- Original tutorial for the base functionality
+- Stream.io for their excellent real-time APIs
+- The Next.js and NestJS communities for documentation and support
 - Google OAuth for authentication infrastructure
 
 ## 📧 Contact
@@ -304,4 +305,4 @@ For questions, issues, or collaboration opportunities, please open an issue in t
 
 ---
 
-**Built with ❤️ as a learning project in framework migration and full-stack development**
+**Built as a learning project in framework migration and modern full-stack development**
